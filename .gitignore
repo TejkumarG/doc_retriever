@@ -1,0 +1,36 @@
+# Python cache files
+__pycache__/
+*.py[cod]
+
+# Virtual environment
+venv/
+env/
+.venv/
+.env
+*.env
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# IDE specific files
+.idea/
+.vscode/
+
+# Data files
+data/
+volumes/
+
+# Docker files
+docker-compose.yml
+Dockerfile
+
+# Coverage reports
+.coverage
+*.cover
+
+# Test files
+*.pytest_cache/
+*.benchmarks/
+
+# Miscellaneous
+.DS_Store
