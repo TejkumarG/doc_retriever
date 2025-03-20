@@ -45,7 +45,7 @@ class CustomLiteLLMEmbeddings(Embeddings):
 
         # Set properties from config or direct parameters
         self.model = model or embedding_settings.get("embedding_model", "text-embedding-ada-002")
-        self.api_key = api_key or self._get_api_key_from_config()
+        self.api_key = api_key
         self.base_url = api_base or embedding_settings.get("embedding_base_url", None)
         self.kwargs = kwargs
 
@@ -67,22 +67,6 @@ class CustomLiteLLMEmbeddings(Embeddings):
                 }
             }
         }
-
-    def _get_api_key_from_config(self) -> str:
-        """Extract API key from configuration based on selected mode."""
-        settings = self.config.get("settings", {})
-        mode_selection = settings.get("mode_selection", {})
-
-        # Check which mode is selected and get its API key
-        if mode_selection.get("private_mode", {}).get("selected", False):
-            return mode_selection.get("private_mode", {}).get("parameters", {}).get("secret_key", "")
-        elif mode_selection.get("zysec_demo_mode", {}).get("selected", False):
-            return mode_selection.get("zysec_demo_mode", {}).get("parameters", {}).get("secret_key", "")
-        elif mode_selection.get("openai_mode", {}).get("selected", False):
-            return mode_selection.get("openai_mode", {}).get("parameters", {}).get("secret_key", "")
-
-        # Default fallback
-        return ""
 
     def _get_embedding_config(self) -> dict:
         """Get the configuration for the embedding call."""

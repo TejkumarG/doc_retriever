@@ -74,12 +74,6 @@ class SummarizerService:
             raise ValueError("Input chunk cannot be empty")
             
         try:
-            # Create trace if not provided
-            # if not trace_id:
-            #     trace_id = self.langfuse.create_trace(
-            #         name="summarization_operation",
-            #         metadata=metadata
-            #     )
             
             # Prepare context-aware input
             context = ""
@@ -118,47 +112,6 @@ class SummarizerService:
             print(f"Error processing chunk: {str(e)}")
             raise
 
-    def _get_completion_config(self) -> Dict[str, Any]:
-        """Return the configuration for LiteLLM completion."""
-        return {
-            "model": CHAT_MODEL,
-            "api_key": OPENAI_API_KEY,
-            "api_base": "https://api.openai.com/v1",
-            "temperature": TEMPERATURE
-        }
-
-    def _invoke(self, messages: List[BaseMessage], stop: Optional[List[str]] = None) -> Dict[str, Any]:
-        """Invoke the chat model with the given messages.
-
-        Args:
-            messages: List of messages to send to the model
-            stop: Optional list of stop sequences
-
-        Returns:
-            Dictionary containing the model's response
-        """
-        prompt = self._convert_messages_to_prompt(messages)
-        response = completion(
-            messages=[{"role": "user", "content": prompt}],
-            **self._get_completion_config()
-        )
-        # Access the generated text from the response
-        generated_text = response.choices[0].message.content
-        return {"text": generated_text}
-
-    async def _ainvoke(self, messages: List[BaseMessage], stop: Optional[List[str]] = None) -> Dict[str, Any]:
-        """Asynchronously invoke the chat model.
-
-        Args:
-            messages: List of messages to send to the model
-            stop: Optional list of stop sequences
-
-        Returns:
-            Dictionary containing the model's response
-        """
-        # Note: LiteLLM doesn't have async support yet, so we use sync version
-        return self._invoke(messages, stop)
-
     def search_query(self, query: str, matched_records: list):
         input_text = f"""
            You are an AI assistant helping to provide relevant responses based on user queries.
@@ -176,10 +129,3 @@ class SummarizerService:
         )
 
         return response.content
-
-def main():
-    # Initialize session state
-    if "processed_documents" not in st.session_state:
-        st.session_state.processed_documents = []
-
-    # Your existing code... 
